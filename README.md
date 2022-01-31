@@ -131,3 +131,40 @@ return (
     )
 ````
 #
+### 3.- Modificar NavBar
+En este punto eliminamos algunos errores de React Router v6, ya que en esta actualización se presentaron cambios:
+
+Pasos a seguir
+* Adaptar componente NavBar en `components/ui/NavBar.js`
+
+En `components/ui/NavBar.js`
+* En el `NavLink` tanto de Marvel como el de DC eliminamos `activeClassName="active"` y `exact` ya que en esta versión ya no existen estos elementos en __React Router__.
+* Agregamos alguna función en la clase utilizando la propiedad `isActive` validamos si el `NavLink` esta activo, en el caso que lo este le agregamos una clase adicional.
+````
+<NavLink
+    className={ ({isActive}) => 'nav-item nav-link' + ( isActive ? ' active ' : '') }
+    to="/marvel"
+>
+    Marvel
+</NavLink>
+````
+* Agregamos algunas clases del __boostrap__ para el `<div>` para mostrarlo en la izquierda los elementos del `<ul>`.
+* Agregamos un `<span>` que ira el nombre del usuario y cambiamos el `NavLink` por un botón con un `onClick` para en el futuro utilizar.
+````
+<div className="navbar-collapse collapse w-100 order-3 dual-collapse2 d-flex justify-content-end">
+    <ul className="navbar-nav ml-auto">
+
+        <span className='nav-item nav-link text-info'>
+            Diego
+        </span>
+        
+        <button
+            className="nav-item nav-link btn"
+            onClick={ handleLogout }
+        >
+            Logout
+        </button>
+    </ul>
+</div>
+````
+#
