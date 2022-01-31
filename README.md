@@ -168,3 +168,76 @@ En `components/ui/NavBar.js`
 </div>
 ````
 #
+### 4.- Crear un nuevo Router
+Aquí se creará un segundo __Router__ para manejar el login de la aplicación, donde no se mostrará el __NavBar__:
+
+Pasos a Seguir
+* Crear nuevo router __DashboardRouter__ en `routers/DashboardRouter.js`.
+* Adaptar __AppRouter__ para solo recibir el login.
+* Crear un nuevo componente __HeroScreen__ en `hero/HeroScreen.js`.
+
+En `hero/HeroScreen.js`
+* Creamos el componente nuevo.
+````
+export const HeroScreen = () => {
+    return (
+        <div>
+            <h1>Hero Screen</h1>
+        </div>
+    )
+};
+````
+En `routers/DashboardRouter.js`
+* Importamos los elementos de __React Router__ y los componentes que se utilizarán
+````
+import { Routes, Route } from "react-router-dom";
+
+import { Navbar } from "../components/ui/NavBar";
+import { DcScreen } from "../components/dc/DcScreen";
+import { MarvelScreen } from "../components/marvel/MarvelScreen";
+import { SearchScreen } from "../components/search/SearchScreen";
+import { HeroScreen } from "../components/hero/HeroScreen";
+````    
+* Dentro del componente agregamos el return, con el __NavBar__ y los diferentes elementos que se mostraran con este, mencionar que el componente __DashboardRoutes__ es un Router hijo.
+````
+return (
+        <>
+            <Navbar />
+            <Routes>
+
+                <Route path="marvel" element={<MarvelScreen />} />
+                <Route path="dc" element={<DcScreen />} />
+                
+                <Route path="search" element={<SearchScreen />} />
+                <Route path="hero" element={<HeroScreen />} />
+                
+                
+                <Route path="/" element={<MarvelScreen />} />
+
+            </Routes>
+        </>
+    )
+````
+En `routers/AppRouter.js`
+* Eliminamos algunas importaciones que ya no se usaran en este componente, y agregamos la importación de __DashboardRoutes__ como Router Hijo.
+````
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+
+import { LoginScreen } from "../components/login/LoginScreen";
+import { DashboardRoutes } from "./DashboardRoutes";
+````
+* Ahora tenemos el componente __LoginScreen__ y ademas agregamos __DashboardRoutes__ que seria el otro router que recibirá el __Navbar__.
+````
+return (
+    <BrowserRouter>
+
+      <Routes>
+        <Route path="/login" element={<LoginScreen />} />
+
+        <Route path="/*" element={<DashboardRoutes />}/>
+      </Routes>
+
+    </BrowserRouter>
+  )
+````
+#
