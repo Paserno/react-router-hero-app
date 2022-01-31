@@ -30,3 +30,104 @@ Pasos a Seguir
     * `ui/` agregar archivo `NavBar.js`.
 
 #
+### 2.- Configurar Router
+Se instala __React Router__ para su uso y configurar:
+
+Pasos a Seguir
+* Crear __AppRouter__ en `routers/AppRouter.js`.
+* Agregamos contenido Boostrap a __NavBar__.
+
+En `routers/AppRouter.js`
+* Importamos React Router con los elementos que se utilizarán y los diferentes componentes que se utilizarán.
+````
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+
+import { DcScreen } from "../components/dc/DcScreen";
+import { LoginScreen } from "../components/login/LoginScreen";
+import { MarvelScreen } from "../components/marvel/MarvelScreen";
+import { SearchScreen } from "../components/search/SearchScreen";
+import { Navbar } from "../components/ui/NavBar";
+````
+* En el return del componente __AppRouter__ se agrega el __NavBar__ con las rutas.
+````
+return (
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+     
+        <Route path="/" element={<MarvelScreen />} />
+        <Route path="/marvel" element={<MarvelScreen />} />
+        <Route path="/dc" element={<DcScreen />} />
+        <Route path="/search" element={<SearchScreen />} />
+        <Route path="/login" element={<LoginScreen />} />
+
+      </Routes>
+
+    </BrowserRouter>
+  )
+````
+En `HeroesApp.js`
+* Importamos el componente __AppRouter__.
+* Return del componente.
+````
+import { AppRouter } from './routers/AppRouter';
+
+return (
+        <AppRouter />
+    )
+````
+En `components/ui/NavBar.js`
+* Importamos React y los elementos de `Link` y `NavLink`.
+````
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
+````
+* Adaptamos un __NavBar__ de boostrap y lo insertamos en return del componente.
+````
+return (
+        <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+            <Link
+                className="navbar-brand"
+                to="/"
+            >
+                Asociaciones
+            </Link>
+
+            <div className="navbar-collapse">
+                <div className="navbar-nav">
+                    <NavLink
+                        activeClassName="active"
+                        className="nav-item nav-link"
+                        exact
+                        to="/marvel"
+                    >
+                        Marvel
+                    </NavLink>
+
+                    <NavLink
+                        activeClassName="active"
+                        className="nav-item nav-link"
+                        exact
+                        to="/dc"
+                    >
+                        DC
+                    </NavLink>
+                </div>
+            </div>
+
+            <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul className="navbar-nav ml-auto">
+                    <NavLink
+                        activeClassName="active"
+                        className="nav-item nav-link"
+                        exact
+                        to="/login"
+                    >
+                        Logout
+                    </NavLink>
+                </ul>
+            </div>
+        </nav>
+    )
+````
+#
