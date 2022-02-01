@@ -434,3 +434,59 @@ import { HeroCard } from "./HeroCard";
 </div>
 ````
 #
+### 7.- Leer Argumento en el URL
+Recibiremos el argumento de la URL, para proximamente mostrar información en el componente __HeroScreen__:
+
+Pasos a Seguir
+* Permitimos que en el componente __HeroScreen__ reciba ids en el URL gracias a React Router.
+* Utilizamos la función `getHeroById` para buscar los heroes por id.
+* Adaptamos el componente __HeroScreen__ para mostar a futuro contenido de los superheroes.
+
+En `routes/DashboardRoutes.js`
+* En el path del componente __HeroScreen__ lo adaptamos para recibir un id con `path="hero/:heroeId"`.
+````
+<Route path="hero/:heroeId" element={<HeroScreen />} />
+````
+En `selects/getHeroById.js`
+* Importamos la data para buscar por id.
+````
+import { heroes } from "../data/heroes"
+````
+* Creamos la función, que recibirá por parametro el `id`.
+* Retornamos en la función la busqueda con `.find()`.
+````
+export const getHeroById = ( id = '' ) => {
+
+    return heroes.find( hero => hero.id === id );
+}
+````
+En `components/hero/HeroScreen.js`
+* Importamos un CustomHook llamada `useParams`, un componente que hace una redirección estos de React Router y la función recien creada `getHeroById`.
+````
+import { useParams, Navigate } from "react-router-dom";
+import { getHeroById } from "../../selectors/getHeroById";
+````
+* En el componente __HeroScreen__ agregamos el hook __useParams__ que permite sacar el URL, en este caso hicimos la desestructuración de `heroeId` que es la id que recibiremos por parametros del URL.
+* Este resultado de la query se la pasamos a la función `getHeroById`, el cual hará la busqueda del heroe, en el caso que no lo encuentre y nos devuelva `undefined`, se hizo una validación.
+* En el caso que entre en la condición retornará el componente propio de __React Router__ `Navigate`, lo que hará es una redirección.
+* Finalmente mostramos en un parrafo el id con el nombre del superheroe.
+````
+export const HeroScreen = () => {
+    const { heroeId } = useParams();
+    const hero = getHeroById(heroeId);
+
+    if (!hero){
+        return <Navigate to='/' /> 
+    }
+    
+    return (
+        <div>
+            <h1>Hero Screen</h1>
+            <p>
+                { hero.superhero }
+            </p>
+        </div>
+    )
+};
+````
+#
