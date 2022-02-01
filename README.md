@@ -241,3 +241,27 @@ return (
   )
 ````
 #
+### 4,5.- Navegar entre Páginas
+Se implementará el botón que de login y logout:
+
+Pasos a Seguir
+* Agregar CustomHook de __React Router__ en __LoginScreen__.
+* Agregar CustomHook de __React Router__ en __NavBar__.
+
+En `components/login/LoginScreen.js`
+* Agregar importación de CustomHook de __React Router__ llamado __useNavigate__.
+````
+import { useNavigate } from 'react-router-dom';
+````
+* Agregamos el Hook __useNavigate__ y lo agregamos a nuestra nueva función `handleLogin`, lo que hará es enviarnos a una ruta de nuestra aplicación, le mandamos un segundo argumento llamado `replace`, lo que hará es remplazar la vista actual en el ← Back del navegador.
+````
+const navigate = useNavigate();
+
+    const handleLogin = () => {
+        navigate('/marvel', {
+            replace: true
+        });
+    }
+````
+Así mismo agregamos el CustomHook __useNavigate__ en el componente NavBar.
+#
