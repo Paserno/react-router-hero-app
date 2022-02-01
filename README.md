@@ -265,3 +265,75 @@ const navigate = useNavigate();
 ````
 Así mismo agregamos el CustomHook __useNavigate__ en el componente NavBar.
 #
+### 5.- Lista de Heroes
+Mostramos una lista en cada componente, de marvel y DC comic:
+
+Pasos a Seguir
+* Agregar __[Data]()__ en `data/heroes.js`.
+* Agregar 📂carpeta `selectors/`.
+    * Crear archivo __getHeroById__.
+    * Crear archivo __getHeroeByPublisher__.
+* Crear componentes __HeroList__ en `components/hero/HeroList.js`.
+* Agregar componente __HeroList__ en los dos componentes __MarvelScreen__ y __DcScreen__.
+
+En `selectors/getHeroeByPublisher.js`
+* Importamos la __data__.
+````
+import { heroes } from "../data/heroes";
+````
+* Creamos la función que recibe la propiedad `publisher`.
+* Agregamos una constante con un arreglo con las dos unicas opciones, y agregamos una validación, en el caso que no tener una de las dos opciones emitir un error.
+* En el caso que todo salga bien se mandará un `.filter()` con los resultados.
+````
+export const getHeroesByPublisher = ( publisher ) => {
+
+    const validPublishers = ['DC Comics', 'Marvel Comics'];
+    if( !validPublishers.includes( publisher ) ){
+        throw new Error( `${ publisher } is not valid publisher` )
+    }
+
+    return heroes.filter( hero => hero.publisher === publisher );
+};
+````
+En `components/hero/HeroList.js`
+* Hacemos referencia a la función `getHeroesByPublisher`. que se utilizará en el componente __HeroList__.
+* Creamos el componente y recibimos en los parametros el `{publisher}`.
+````
+import { getHeroesByPublisher } from "../../selectors/getHeroesByPublisher";
+
+export const HeroList = ({ publisher }) => { ... }
+````
+* Recibiendo la función pasandole como parametro `publisher` y agregandolo a la constante `heroes`.
+* Retornamos una lista desordenada, con los heroes que se recibiran gracias al `.map()` y pasandole una `key`.
+````
+const heroes = getHeroesByPublisher( publisher );
+
+return (
+        <>
+            <ul>
+                {
+                    heroes.map( hero => (
+                        <li key={ hero.id }>
+                            { hero.superhero }
+                        </li>
+                    ))
+                }
+            </ul>
+        </>
+    )
+````
+En `components/dc/DcScreen.js` o `components/marvel/MarvelScreen.js` 
+* importamos en ambos componente __HeroList__. 
+````
+import { HeroList } from '../hero/HeroList';
+````
+* En este ejemplo se muestra el componente de __DcScreen__, pero de igual manera se agrega en __MarvelScreen__, enviando el __HeroList__ el parametro correspondido. _(En el caso de __MarvelScreen__ `publisher="Marvel Comics"`)_
+````
+return (
+        <div>
+            <h1>DcScreen</h1>
+            <HeroList publisher="DC Comics"/>
+        </div>
+    )
+````
+#
