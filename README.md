@@ -559,3 +559,25 @@ return (
 )
 ````
 #
+### 8.- useMemo
+Es necesario memorizar algunas partes de la aplicación como peticiones a APIs o bases de datos, en este caso, se utilizará en el uso de estas funciónes `getHeroById` y `getHeroesByPublisher`:
+
+Pasos a Seguir
+* Implementar useMemo en el componente __HeroList__ y __HeroScren__.
+
+En `components/hero/HeroScreen.js`
+* Importamos el hook propio de React.
+````
+import { useMemo } from 'react';
+````
+* Utilizamos el hook para memorizar una potencial función pesada, agregamos un __callback__ con `getHeroById` y en el caso que cambie la dependencia `[heroeId]` volverá a memorizar.
+````
+const hero = useMemo(() => getHeroById(heroeId), [heroeId]);
+````
+En `components/hero/HeroList.js`
+* Realizamos la importación de __useMemo__ de React.
+* Al igual que en el anterior componente utilizamos el __useMemo__ para memorizar una potencial función pesada, dandole como dependencia `[publisher]`.
+````
+const heroes = useMemo(() => getHeroesByPublisher( publisher ), [publisher]);
+````
+#
