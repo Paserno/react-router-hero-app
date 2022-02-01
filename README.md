@@ -337,3 +337,100 @@ return (
     )
 ````
 #
+### 6.- Tarjetas de Heroe
+Se creará las tarjetas con los diferentes héroes:
+
+Pasos a Seguir
+* Crear componente __HeroCard__ en `components/hero/HeroCard.js`.
+* Agregar el componente nuevo a __HeroList__.
+
+En `components/hero/HeroCard.js`
+* Importamos `Link` para usarlo a futuro.
+````
+import { Link } from 'react-router-dom';
+````
+* Creamos el componente __HeroCard__ y traemos todas las propiedades que sacamos de `data/heroes.js`.
+* Creamos el path donde estan las imagenes en la aplicación y lo guardamos en una constante.
+````
+export const HeroCard = ({ 
+     id,
+     superhero,
+     publisher,
+     alter_ego,
+     first_appearance,
+     characters,
+    }) => {
+
+    const imagePath = `/assets/${id}.jpg`;
+    ...
+    }
+````
+* Retornamos varios `<div>` con diferentes clases de __boostrap__, para mostrar el contenido de una manera agradable.
+````
+return (
+
+    <div className="col">
+        <div className="card">
+            
+            <div className="row no-gutters">
+                <div className="col-4">
+                ...                
+                </div>
+                <div className="col-8">
+
+                    ...
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+)
+````
+* En el `<div className="col-4">` agregamos la imagen que se mostrará, le añadimos el path donde tenemos la imagen con `imagePath`.
+````
+<img src={ imagePath } className="card-img" alt={ superhero }/>
+````
+* Agregamos el ultimo div dentro de `<div className="col-8">`.
+* Añadimos un `<h5>` con el nombre del superheroe, su nombre en un parrafo.
+* Ponemos una condición en el caso de que el nombre `alter_ego` sea diferente a `characters`, se mostrará el parrafo con `characters`.
+* Ademas agregamos su primera aparicion en un `<small>` y finalmente agregmoas el `<Link>` para usarlo a futuro.
+````
+<div className="card-body">
+    <h5 className="card-title">{ superhero }</h5>
+    <p className="card-text">{ alter_ego }</p>
+    {
+        ( alter_ego !== characters ) &&
+            <p className="text-muted">{ characters }</p>
+    }
+    <p className="card-text">
+        <small className="text-muted">{ first_appearance }</small>
+    </p>
+
+    <Link to={`/hero/${id}`}>
+        Mas..
+    </Link>
+
+</div>
+````
+En `components/hero/HeroCard.js`
+* Importamos el componente __HeroCard__.
+````
+import { HeroCard } from "./HeroCard";
+````
+* Agregamos el ultimo `<div>` con diferentes clases de boostrap.
+* Finalmente en el interior del `.map()` se inserta el componente `<HeroCard>` enviandole toda las propiedades que necesita con el __operador spread__.  
+````
+<div className="row rows-cols-1 row-cols-md-3 g-3">
+        {
+            heroes.map( hero => (
+                <HeroCard 
+                    key={ hero.id }
+                    {...hero }
+                />
+            ))
+        }
+
+</div>
+````
+#
