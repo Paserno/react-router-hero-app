@@ -490,3 +490,72 @@ export const HeroScreen = () => {
 };
 ````
 #
+### 7,5.- Estilos de HeroScreen
+Se creará el formato de como se mostraran los héroes dentro del componente __HeroScreen__:
+
+Pasos a seguir
+* Adaptar con HTML y boostrap el contenido que se mostrará en el componente __HeroScreen__.
+
+En `components/hero/HeroScreen.js`
+* Se importa el CustomHook de React Router llamado __useNavigate__.
+````
+import { useParams, Navigate, useNavigate } from "react-router-dom";
+````
+* Le asignamos una variable al __Hook__, para utilizarlo en la función que será disparada por un botón, este Hook de React Router nos ayudará a volver una página atras con `(-1)`. _(Cuando se abra la tarjeta se ira al componente __HeroScreen__, así con esta función permitirá volver)_
+````
+const navigate = useNavigate();
+
+const handleReturn = () => {
+        navigate( -1 ); 
+    }
+````
+* Desestructuramos todos los elementos que se nos pase en la constante `hero`, de esa manera utilizarlos mas facil proximamente.
+* Agregamos el path de las imagenes a una constante. _(aquí un ejemplo de la ayuda de la desestructuración con el `id`)_
+````
+const hero = getHeroById(heroeId);
+
+const {
+        id,
+        superhero,
+        publisher,
+        alter_ego,
+        first_appearance,
+        characters
+    } = hero;
+
+    const imagePath = `/assets/${id}.jpg`;
+````
+* La imagen `<img>` le pasamos el path de la constante q creamos, ademas de agregar algunas clases de boostrap.
+* En `<h3>` se muestra el nombre del superheroe, despues una lista desordenada con algunos datos.
+* Un `<h5>` con el nombre del personaje y finalmente un botón para volver _(← Back)_.
+````
+return (
+    <div className="row mt-5">
+        <div className="col-4">
+
+            <img src={ imagePath } alt={ superhero } className="img-thumbnail"/>
+        </div>
+        <div className="col-8">
+
+            <h3>{ superhero }</h3>
+            <ul className="list-group list-group-flush">
+                <li className="list-group-item"><b>Alter ego:</b> { alter_ego }</li>
+                <li className="list-group-item"><b>Publisher:</b> { publisher }</li>
+                <li className="list-group-item"><b>Fist Apparence:</b> { first_appearance }</li>
+            </ul>
+
+            <h5 className="mt-3">Characters</h5>
+            <p>{ characters }</p>
+
+            <button
+                className="btn btn-outline-info"
+                onClick={ handleReturn }
+            >
+                Volver
+            </button>
+
+        </div>
+    </div>
+)
+````
+#
