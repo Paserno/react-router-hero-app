@@ -1,6 +1,6 @@
 > __Elemento Anterior 👀:__ __[Hook App 🎣](https://github.com/Paserno/react-hooks)__
 # HeroesApp - React
-Se hará un Aplicación utilizando __React Router__, para lograr hacer una __SPA__ _(Single Page Aplication)_ relacionada a Heroes. Se utilizo el siguiente elemento.
+Se hará un Aplicación utilizando __React Router__, para lograr hacer una __SPA__ _(Single Page Aplication)_ relacionada a Héroes. Se utilizo el siguiente elemento.
 
 * __[React Router](https://reactrouter.com/docs/en/v6/getting-started/overview)__
 * __[Animate.css](https://animate.style)__
