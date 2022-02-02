@@ -739,3 +739,31 @@ const handleSearch = (e) => {
 </div>
 ````
 #
+### 11.- useMemo y Mensajes de Alerta
+En este punto se usará el useMemo en el uso de la función `getHeroesByName` y ademas alertas condicionales para cuando no se ha buscando algun heroe o si no se ha encontrado uno:
+
+Pasos a Seguir
+* Implementar __useMemo__ en el componente __SearchScreen__, ademas de generar alertas.
+
+En `components/search/SearchScreen.js`
+* Importación adicional de __useMeno__.
+````
+...
+import { useMemo } from "react";
+````
+* En la función `getHeroesByName` se le agrego el Hook __useMemo__, con la dependencia de `[query]`.
+````
+const heroesFilter = useMemo(() => getHeroesByName(query), [query]);
+````
+* Hacemos una condicion ternaria de la `query`, en el caso que no se mande nada, se mostrará una alerta de `Buscar un Héroe`, en el caso que exista algo en `query`, pero no venga nada en `heroesFilter` se mostrará otra alerta con su mensaje de `No hay Resultados:`, de esta manera dar una retroalimentación al usuario.
+````
+{
+    (query === '')
+        ? <div className="alert alert-info text-center"> Buscar un Héroe</div>
+        : ( heroesFilter.length === 0 )
+            && <div className="alert alert-danger text-center">
+                No hay Resultados: { query }
+                </div>
+}
+````
+#
