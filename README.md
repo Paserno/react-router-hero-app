@@ -271,7 +271,7 @@ Así mismo agregamos el CustomHook __useNavigate__ en el componente NavBar.
 Mostramos una lista en cada componente, de marvel y DC comic:
 
 Pasos a Seguir
-* Agregar __[Data]()__ en `data/heroes.js`.
+* Agregar __[Data](https://github.com/Paserno/react-router-hero-app/blob/main/src/data/heroes.js)__ en `data/heroes.js`.
 * Agregar 📂carpeta `selectors/`.
     * Crear archivo __getHeroById__.
     * Crear archivo __getHeroeByPublisher__.
