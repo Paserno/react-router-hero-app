@@ -4,6 +4,7 @@ Se hará un Aplicación utilizando __React Router__, para lograr hacer una __SPA
 
 * __[React Router](https://reactrouter.com/docs/en/v6/getting-started/overview)__
 * __[Animate.css](https://animate.style)__
+* __[Query String](https://www.npmjs.com/package/query-string)__
 
 #
 Recordar que si se desea ejecutar esta aplicación, deben de reconstruir los módulos de node así:
@@ -657,6 +658,83 @@ const handleSearch = (e) => {
         </button>
 
     </form>
+
+</div>
+````
+#
+### 10.- Aplicar Filtros de Héroes
+Lo que se hará es mostrar en el componente __SearchScreen__ un listado de los héroes, para cuando se búsquen, ademas de aplicar el filtro necesario para la búsqueda y con ayuda de __QueryString__:
+
+Pasos a Seguir
+* Crear archivo `getHeroesByName` con su función en `selectors/getHeroesByName.js` implementar filtro.
+* Implementar componente __HeroCard__ en __SearchScreen__ para mostrar los Héroes y adaptar para el componente a las necesidades.
+
+En `selectors/getHeroesByName.js`
+* Importamos la data para el filtro.
+````
+import { heroes } from "../data/heroes";
+````
+* Crear función que reciba la propiedad `name` para la búsqueda.
+* Creamos validación en el caso que se envíe ningun caracter.
+* Recibir el `name` y comparar con los heroes en la data con el `includes()`.
+````
+export const getHeroesByName = (name = '') => {
+    if( name.length === 0 ){
+        return []
+    }
+
+    name = name.toLowerCase();
+    return heroes.filter(hero => hero.superhero.toLowerCase().includes(name));
+}
+````
+En `components/search/SearchScreen.js`
+* Instalar __QueryString__ que nos ayudará a transformar una query en string. 
+* Importamos adiconalmente 2 CustomHooks de React Router, importar __QueryString__, la función recien creada `getHeroesByName` y el componente __HeroCard__
+````
+import { useNavigate, useLocation } from "react-router-dom";
+import queryString from 'query-string';
+
+import { useForm } from "../../hooks/useForm";
+import { getHeroesByName } from "../../selectors/getHeroesByName";
+import { HeroCard } from "../hero/HeroCard";
+````
+* Dentro del componente utilizamos los dos CustomHook de __React Router__.
+    * __useNavigate__ nos ayudará a mandar una query al URL.
+    * __useLocation__ nos aportará en mostrarnos el path y el query params.
+* Con la liberia de queryString, nos permite tomar el contenido del __useLocation__ y transformarlo en un string, para esto le mandamos `location.search` y desestructuramos lo que venga en `query`.
+* Lo que venga en `query` se lo pasamos como valor inicial al CustomHook __useForm__, para que conserve en el input el valor de la query.
+* Ademas el contenido de la `query` se lo entregamos en la función `getHeroesByName` para poder realizar la búsqueda del superheroe.
+* Como habiamos mencionado el Hook __useNavigate__, nos ayudará enviar una query, para así poder manejar la búsqueda y que el input conserve el valor.
+````
+const navigate = useNavigate();
+const location = useLocation();
+
+const { query = '' } = queryString.parse(location.search);
+
+const [{searchText}, handleInputChange] = useForm({searchText: query});
+
+
+const heroesFilter = getHeroesByName(query);
+
+const handleSearch = (e) => {
+    e.preventDefault();
+    navigate(`?query=${ searchText }`);
+}
+````
+* En el return del componente, agregamos un `.map()` y le agregamos el componente __HeroCard__ pasandole todo los parametros necesario con el __operador spread__.
+````
+<div className="col-7">
+    <h4>Resultados</h4>
+    <hr/>
+
+    {
+        heroesFilter.map(hero => (
+            <HeroCard 
+                key={hero.id}
+                {...hero}
+            />
+        ))
+    }
 
 </div>
 ````
