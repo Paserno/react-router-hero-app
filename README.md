@@ -3,6 +3,7 @@
 Se hará un Aplicación utilizando __React Router__, para lograr hacer una __SPA__ _(Single Page Aplication)_ relacionada a Heroes. Se utilizo el siguiente elemento.
 
 * __[React Router](https://reactrouter.com/docs/en/v6/getting-started/overview)__
+* __[Animate.css](https://animate.style)__
 
 #
 Recordar que si se desea ejecutar esta aplicación, deben de reconstruir los módulos de node así:
@@ -579,5 +580,84 @@ En `components/hero/HeroList.js`
 * Al igual que en el anterior componente utilizamos el __useMemo__ para memorizar una potencial función pesada, dandole como dependencia `[publisher]`.
 ````
 const heroes = useMemo(() => getHeroesByPublisher( publisher ), [publisher]);
+````
+#
+### 9.- Componente de Busqueda
+Agregamos algunas animaciones en la aplicación gracias a __[Animated.css](https://animate.style)__ y se adaptará el componente __SearchScreen__ con un formulario de búsqueda, para luego reutilizar un CustomHook que se llama __[useForm](https://github.com/Paserno/react-hooks/blob/main/src/hooks/useForm.js)__ una vez implementado se utilizará:
+
+Pasos a Seguir
+* Agregar animación en el componente __HeroList__ y __HeroScreen__ pero antes importar la librería en `public/index.html`.
+* Agregar `<NavLink>` en NavBar del componente __SearchScreen__.
+* Implementar CustomHook de formulario __[useForm](https://github.com/Paserno/react-hooks/blob/main/src/hooks/useForm.js)__, creando 📂carpeta con su archivo en `hooks/useForm.js` para pegarlo ahí.
+* Adaptar __SearchScreen__.
+
+En `components/hero/HeroList.js`
+* Se Agregan en la clase del `<div>` animaciones sutiles para mejorar la aplicación `animate__animated animate__fadeIn`.
+````
+<div className="row rows-cols-1 row-cols-md-3 g-3 animate__animated animate__fadeIn">
+````
+En `components/hero/HeroScreen.js`
+* En la imagen del componente __HeroScreen__ se le agregan animaciones `animate__animated animate__backInLeft`.
+````
+<img 
+    src={ imagePath } 
+    alt={ superhero } 
+    className="img-thumbnail animate__animated animate__backInLeft"
+/>
+````
+En `components/ui/NavBar.js`
+* Se agrega un nuevo `<NavLink>` para el componente __SearchScreen__ que se desarrollará.
+````
+<NavLink
+    className={ ({isActive}) => 'nav-item nav-link' + ( isActive ? ' active ' : '') }
+    to="/search"
+>
+    Search
+</NavLink>
+````
+En `components/search/SearchScreen.js`
+* Importar el CustomHook.
+````
+import { useForm } from "../../hooks/useForm";
+````
+* Implementamos el __useForm__ con sus funciones y el estado lo asignamos vacío.
+* Creamos la función `handleSearch`, agregamos una propiedad para no recargar la página y comprobamos con la impresión de pantalla. 
+````
+const [{searchText}, handleInputChange, reset] = useForm({searchText: ''})
+
+const handleSearch = (e) => {
+    e.preventDefault();
+    console.log(searchText);
+    reset();
+}
+````
+* En el return implementamos algunos `<div>` con un `<h4>`.
+* Creamos un `<form>` con un input, le pasamos el `value={ searchText } ` y para agregar los datos en el formulario usamos `onChange={handleInputChange}`  con ayuda del __useForm__, finalmente tenemos el botón con el submit.
+````
+<div className="col-5">
+    <h4>Buscar</h4>
+    <hr />
+
+    <form onSubmit={ handleSearch }>
+        <input
+            type="text"
+            placeholder="Buscar un Héroe"
+            className="form-control"
+            name="searchText"
+            autoComplete="off"
+            value={ searchText }
+            onChange={handleInputChange}
+        />
+
+        <button 
+            className="btn btn-primary mt-2"
+            type="submit"
+        >
+            Buscar
+        </button>
+
+    </form>
+
+</div>
 ````
 #
