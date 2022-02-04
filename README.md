@@ -885,3 +885,119 @@ const { user } = useContext(AuthContext);
 </span>
 ````
 #
+### 2.- Context de Login y Logout
+Ahora enviaremos a traves del Context los nuevos estados hacia el Reducer:
+
+Pasos a Seguir
+* Implementar Context y disparo de acción en el componente __LoginScreen__.
+    * Ademas de implementar un pequeño input.
+* Implementar Context en el componente __NavBar__ con su acción para el Reducer.
+* Almacenar estados en el __localStorage__ en el componente __HeroesApp__.
+
+En `components/login/LoginScreen.js`
+* Se importan 5 nuevos elementos useContext, useRef, useForm, AuthContext y types.
+````
+import { useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../auth/authContext';
+import { useForm } from '../../hooks/useForm';
+import { types } from '../../types/types';
+````
+* Le agregamos un __useForm__ para el manejo de formulario.
+* Usamos el __useContext__ asignando el Context creado y utilizando el `dispatch`.
+* Implementamos el __useRef__, para tener referencia al componente input.
+````
+export const LoginScreen = () => {
+
+    const [valueInput, handleInputChange] = useForm({name: 'Diego'});
+    const { name } = valueInput;
+
+    const { dispatch } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const inputRef = useRef(null);
+    ...
+}
+````
+* Guardamos el valor del `inputRef` en una constante para luego usarlo.
+* Realizamos una validación del input, que no sea menor a 3 caracteres.
+* Creamos la acción, enviando en el `payload` el valor guardado en la constante del input y se lo mandamos al `dispatch`.
+````
+    const handleLogin = (e) => {
+        e.preventDefault()
+        const userName = inputRef.current.value
+        if (userName.length <= 2) {
+            return;
+        }
+
+        const action = {
+            type: types.login,
+            payload: { name: userName }
+        }
+
+        dispatch(action);
+
+        navigate('/marvel', {
+            replace: true
+        });
+    }
+````
+* Cremos un `<form>` y un input, para asignarle el nombre del usuario.
+````
+<form>
+    <input
+        ref={inputRef}
+        type="text"
+        name="name"
+        className="form-control"
+        placeholder="Tu Nombre"
+        autoComplete="off"
+        value={name}
+        onChange={handleInputChange}
+    />
+
+    <button
+        className="btn btn-primary"
+        onClick={handleLogin}
+    >
+        Login
+    </button>
+</form>
+````
+En `components/ui/NavBar.js`
+* Agregamos el `type` para usar el `dispatch` del Reducer.
+````
+import { types } from '../../types/types';
+````
+* Utilizamos ahora el `dispatch` en el useContext.
+````
+const { user, dispatch } = useContext(AuthContext);
+````
+* Agregamos el `dispatch` con su acción en la función `handleLogout`.
+````
+const handleLogout = () => {
+        dispatch({
+            type: types.logout
+        });
+
+        navigate('/login', {
+            replace: true
+        });
+    }
+````
+En `HeroesApp.js`
+* Agregamos la importacion de __useEffect__.
+````
+import { useEffect, useReducer } from 'react';
+````
+* Agregamos un __useEffect__, con una validación en el caso que no venga `user`, se retornará.
+    * En el caso que si venga `user` se guardará en el __localStorage__.
+    * El Effect solo se renderizará cuando `user` cambie.
+````
+useEffect(() => {
+      if( !user ) return;
+
+      localStorage.setItem('user', JSON.stringify(user));
+      
+    }, [user]);
+````
+#
