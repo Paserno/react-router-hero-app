@@ -9,7 +9,7 @@ Se hará un Aplicación utilizando __React Router__, para lograr hacer una __SPA
 
 Contenido Adicional 
 * __[Protección de Rutas](https://github.com/Paserno/react-router-hero-app#protección-de-rutas)__
-* __[Imágenes en SRC]()__
+* __[Imágenes en SRC](https://github.com/Paserno/react-router-hero-app#imágenes-en-src)__
 ----
 
 Recordar que si se desea ejecutar esta aplicación, deben de reconstruir los módulos de node así:
