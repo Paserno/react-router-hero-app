@@ -6,12 +6,12 @@ Se hará un Aplicación utilizando __React Router__, para lograr hacer una __SPA
 * __[Animate.css](https://animate.style)__
 * __[Query String](https://www.npmjs.com/package/query-string)__
 
-----------------
+
 Contenido Adicional 
 * __[Protección de Rutas]()__
-----------------
 
-#
+----
+
 Recordar que si se desea ejecutar esta aplicación, deben de reconstruir los módulos de node así:
 ````
 npm install
@@ -22,7 +22,7 @@ npm start
 ````
 <br>
 
-#
+----
 ### 1.- Inicio del Proyecto HeroesApp
 En este punto se crea el proyecto en __React__ y se eliminan algunos elementos, para luego adaptarlo a lo que se hará:
 
@@ -36,7 +36,7 @@ Pasos a Seguir
     * `search/` agregar archivo `SearchScreen.js`.
     * `ui/` agregar archivo `NavBar.js`.
 
-#
+----
 ### 2.- Configurar Router
 Se instala __React Router__ para su uso y configurar:
 
@@ -137,7 +137,7 @@ return (
         </nav>
     )
 ````
-#
+----
 ### 3.- Modificar NavBar
 En este punto eliminamos algunos errores de React Router v6, ya que en esta actualización se presentaron cambios:
 
@@ -174,7 +174,7 @@ En `components/ui/NavBar.js`
     </ul>
 </div>
 ````
-#
+----
 ### 4.- Crear un nuevo Router
 Aquí se creará un segundo __Router__ para manejar el login de la aplicación, donde no se mostrará el __NavBar__:
 
@@ -247,7 +247,7 @@ return (
     </BrowserRouter>
   )
 ````
-#
+----
 ### 4,5.- Navegar entre Páginas
 Se implementará el botón que de login y logout:
 
@@ -271,7 +271,8 @@ const navigate = useNavigate();
     }
 ````
 Así mismo agregamos el CustomHook __useNavigate__ en el componente NavBar.
-#
+
+----
 ### 5.- Lista de Heroes
 Mostramos una lista en cada componente, de marvel y DC comic:
 
@@ -343,7 +344,7 @@ return (
         </div>
     )
 ````
-#
+----
 ### 6.- Tarjetas de Heroe
 Se creará las tarjetas con los diferentes héroes:
 
@@ -440,7 +441,7 @@ import { HeroCard } from "./HeroCard";
 
 </div>
 ````
-#
+----
 ### 7.- Leer Argumento en el URL
 Recibiremos el argumento de la URL, para proximamente mostrar información en el componente __HeroScreen__:
 
@@ -496,7 +497,7 @@ export const HeroScreen = () => {
     )
 };
 ````
-#
+----
 ### 7,5.- Estilos de HeroScreen
 Se creará el formato de como se mostraran los héroes dentro del componente __HeroScreen__:
 
@@ -565,7 +566,7 @@ return (
     </div>
 )
 ````
-#
+----
 ### 8.- useMemo
 Es necesario memorizar algunas partes de la aplicación como peticiones a APIs o bases de datos, en este caso, se utilizará en el uso de estas funciónes `getHeroById` y `getHeroesByPublisher`:
 
@@ -587,7 +588,7 @@ En `components/hero/HeroList.js`
 ````
 const heroes = useMemo(() => getHeroesByPublisher( publisher ), [publisher]);
 ````
-#
+----
 ### 9.- Componente de Busqueda
 Agregamos algunas animaciones en la aplicación gracias a __[Animated.css](https://animate.style)__ y se adaptará el componente __SearchScreen__ con un formulario de búsqueda, para luego reutilizar un CustomHook que se llama __[useForm](https://github.com/Paserno/react-hooks/blob/main/src/hooks/useForm.js)__ una vez implementado se utilizará:
 
@@ -666,7 +667,7 @@ const handleSearch = (e) => {
 
 </div>
 ````
-#
+----
 ### 10.- Aplicar Filtros de Héroes
 Lo que se hará es mostrar en el componente __SearchScreen__ un listado de los héroes, para cuando se búsquen, ademas de aplicar el filtro necesario para la búsqueda y con ayuda de __QueryString__:
 
@@ -743,7 +744,7 @@ const handleSearch = (e) => {
 
 </div>
 ````
-#
+----
 ### 11.- useMemo y Mensajes de Alerta
 En este punto se usará el useMemo en el uso de la función `getHeroesByName` y ademas alertas condicionales para cuando no se ha buscando algun heroe o si no se ha encontrado uno:
 
@@ -775,7 +776,7 @@ const heroesFilter = useMemo(() => getHeroesByName(query), [query]);
 # Protección de Rutas
 Una vez avanzado a este punto la aplicacón funcióna bien, pero ahora se implementará el manejo de rutas, tanto privadas como publicas. 
 
-#
+----
 ### 1.- Context y Reducer
 Se crearán archivos para el manejo de la autentificación de la aplicación:
 
@@ -884,7 +885,7 @@ const { user } = useContext(AuthContext);
                         { user.name }
 </span>
 ````
-#
+----
 ### 2.- Context de Login y Logout
 Ahora enviaremos a traves del Context los nuevos estados hacia el Reducer:
 
@@ -1000,4 +1001,108 @@ useEffect(() => {
       
     }, [user]);
 ````
-#
+----
+### 3.- Ruta Pública - Ruta Privada
+Se crearán nuevas rutas para mayor protección de la aplicación de esta manera los usuarios que no se encuentran autenticados no podran acceder al contenido de la aplicación y los que estan autenticados no podran acceder al login:
+
+Pasos a Seguir
+* Se creará 2 nuevas componentes para la protección de rutas llamadas __PrivateRote__ y __PublicRoute__. 
+* Crear un nuevo __localStorage__ para recordar la ruta en que este el usuario, para el caso que cuando cierre sesión y vuelva a iniciarla se mantenga en memoria en que punto de la aplicación quedo.
+
+En `routers/PrivateRoute.js`
+* Realizamos las importaciones de los siguientes elementos
+    * __useContext__ para saber en que estado esta el `logged` para saber si esta logiado o no el usuario.
+    * El __Navigate__ para la redirección.
+    * __useLocation__ que nos permitirá sacar el path y la query de la URL.
+    * Finalmente __AuthContext__ que nos dará el contecto al Hook de React. 
+````
+import { useContext } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { AuthContext } from '../auth/authContext';
+````
+* Creamos el componente __PrivateRoute__ que recibira en las propiedades `{ children }` que vendrían a ser todos los componentes hijos.
+* Utilizamos el __useContext__ y establecemos el Context de __AuthContext__, para luego desestrucutrar el estado del Reducer llamado `user`.
+* Usamos el CustomHook de React Router llamado __useLocation__ que nos permitirá traer el contenido de la URL, en este caso desestrucutramos `pathname` y `search` que seria la query.
+* Hacemos uso del __localStorage__ para almacenar el ultimo path que estuvo el usuario en la aplicación, para esto usamos el `pathname` y le concatenamos `search`.
+````
+export const PrivateRoute = ({ children }) => {
+
+    const { user } = useContext(AuthContext);
+    const {pathname, search} = useLocation();    
+
+    localStorage.setItem('lastPath', pathname + search);
+    ...
+}
+````
+* Finalmente hacemos una condición, en el caso que `use.logged` este en __true__, y quiera ir al login no lo permitirá este componente porque lo redireccionará al componente hijo, y en el caso que este en __false__, se saldrá al login y no se podra acceder al contenido de la página.
+````
+ return user.logged 
+        ? children
+        : <Navigate to="/login" />
+````
+En `routers/PublicRoute.js`
+* Realizamos las importaciones de los siguientes elementos
+    * __useContext__ para saber en que estado esta el `logged` para saber si esta logiado o no el usuario.
+    * El __Navigate__ para la redirección.
+    * Finalmente __AuthContext__ que nos dará el contecto al Hook de React. 
+````
+import { useContext } from 'react';
+import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../auth/authContext';
+````
+* Creamos el componente __PublicRoute__ que recibira en las propiedades `{ children }` que vendrían a ser todos los componentes hijos.
+* Utilizamos el __useContext__ y establecemos el Context de __AuthContext__, para luego desestrucutrar el estado del Reducer llamado `user`.
+````
+export const PublicRoute = ({ children }) => {
+
+    const { user } = useContext(AuthContext);
+    ...
+}
+````
+* Finalmente hacemos la condición de `user.logged` en el caso que sea __true__ se redireccionará a la aplicación, en el caso que no se redireccionará al login.
+````
+ return user.logged
+            ? <Navigate to="/marvel" />
+            : children
+````
+En `routers/AppRouter.js`
+* Se agregan 2 nuevas importaciones al componente, __PrivateRoute__ y __PublicRoute__
+````
+import { PrivateRoute } from "./PrivateRoute";
+
+import { PublicRoute } from "./PublicRoute";
+````
+* Entre el `<Routes>` se agregarán las 2 nuevas rutas __PublicRoute__ y __PrivateRoute__.
+    * Encerramos el componente __LoginScreen__ entre el componente __PublicRoute__.
+    * Encerramos el componente __DashboardRoutes__ que contiene todo el contenido de la aplicación entre el componente de la ruta privada __PrivateRoute__. 
+````
+<Routes>        
+        <Route path="/login" element={
+            <PublicRoute>
+              <LoginScreen />
+            </PublicRoute>  
+          } 
+        />
+
+        <Route path="/*" element={
+            <PrivateRoute>
+              <DashboardRoutes />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+````
+En `components/login/LoginScreen`
+* Dentro de la función `handleLogin` del componente __LoginScreen__ se agregará esta actualización.
+    * Almacenamos en una constante llamada `lastPath` el contenido que obtengamos del localStorage, en el caso de no tener nada, se enviará la ruta `/marvel`.
+    * Actualizando la constante del CustomHook __useNavigate__, le agregaremos entre sus parametros el contenido que recibamos de la constante del __localStorage__.
+````
+const lastPath = localStorage.getItem('lastPath') || '/marvel';
+
+navigate( lastPath, {
+    replace: true
+});
+````
+De esa manera se redirecionará a la ultima ruta que estuvo el usuario.
+
+----
