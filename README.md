@@ -9,7 +9,7 @@ Se hará un Aplicación utilizando __React Router__, para lograr hacer una __SPA
 
 Contenido Adicional 
 * __[Protección de Rutas](https://github.com/Paserno/react-router-hero-app#protección-de-rutas)__
-
+* __[Imágenes en SRC]()__
 ----
 
 Recordar que si se desea ejecutar esta aplicación, deben de reconstruir los módulos de node así:
@@ -1105,4 +1105,45 @@ navigate( lastPath, {
 ````
 De esa manera se redirecionará a la ultima ruta que estuvo el usuario.
 
+----
+#
+# Imágenes en SRC
+Presentamos algunos problemas al desplegar la aplicación en Github Pages, por esto se modificará la posicion que esta la 📂carpeta `assets/` el cual contiene las imágenes de los superheroes.
+
+----
+### 1.- Cambiar Posición de Assets
+Tomaremos la 📂carpeta `assets/` que se encuentra en `public/assets/` y la dejaremos en `src/`, de esta manera manejaremos mejor las imagenes en la aplicación:
+
+Pasos a Seguir
+* Mover carpeta `assets/` de `public/` a `scr/`.
+* Crear un Helper donde centralizaremos el path de las imágenes, de esta forma toda la aplicación podra acceder a ella.
+* Modificar el componente __HeroCard__ y __HeroScreen__.
+
+En `helpers/heroImages.js`
+* Aqui centralizaremos el path de la imágen, esto lo logramos gracias a Webpack con `require.context()`.
+````
+export const heroeImage = require.context('../assets', true); 
+````
+En `components/hero/HeroCard.js`
+* Importamos la función que tiene el path de las imágenes.
+````
+import { heroeImage } from '../../helpers/heroImages';
+````
+* Agregamos la función `heroImage()` y le pasamos el path de la imágen con su id, de esta manera teniendo un path dinamico.
+````
+<img src={ heroeImage(`./${id}.jpg`) } className="card-img" alt={ superhero }/>
+````
+En `components/hero/HeroScreen.js`
+* Importamos la función que tiene el path de las imágenes.
+````
+import { heroeImage } from '../../helpers/heroImages';
+````    
+* En la imagen, especificamente en el `src` le pasamos la función del path y le pasamos la id, para tener un path dinamico de imágenes.
+````
+<img 
+    src={ heroeImage(`./${id}.jpg`) } 
+    alt={ superhero } 
+    className="img-thumbnail animate__animated animate__backInLeft"
+/>
+````
 ----

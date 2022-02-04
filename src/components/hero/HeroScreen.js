@@ -1,6 +1,9 @@
 import { useMemo } from "react";
 import { useParams, Navigate, useNavigate } from "react-router-dom";
+import { heroeImage } from "../../helpers/heroImages";
 import { getHeroById } from "../../selectors/getHeroById";
+
+// import batman from '../../assets/dc-batman.jpg' // Recurso estatico
 
 
 export const HeroScreen = () => {
@@ -27,13 +30,15 @@ export const HeroScreen = () => {
         characters
     } = hero;
     
-    const imagePath = `/assets/${id}.jpg`;
+    // const imagePath = `/assets/${id}.jpg`; // forma antigua
+        
+ 
 
     return (
         <div className="row mt-5">
             <div className="col-4">
                 <img 
-                    src={ imagePath } 
+                    src={ heroeImage(`./${id}.jpg`) } 
                     alt={ superhero } 
                     className="img-thumbnail animate__animated animate__backInLeft"
                     />
