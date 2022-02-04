@@ -6,6 +6,11 @@ Se hará un Aplicación utilizando __React Router__, para lograr hacer una __SPA
 * __[Animate.css](https://animate.style)__
 * __[Query String](https://www.npmjs.com/package/query-string)__
 
+----------------
+Contenido Adicional 
+* __[Protección de Rutas]()__
+----------------
+
 #
 Recordar que si se desea ejecutar esta aplicación, deben de reconstruir los módulos de node así:
 ````
@@ -765,5 +770,118 @@ const heroesFilter = useMemo(() => getHeroesByName(query), [query]);
                 No hay Resultados: { query }
                 </div>
 }
+````
+#
+# Protección de Rutas
+Una vez avanzado a este punto la aplicacón funcióna bien, pero ahora se implementará el manejo de rutas, tanto privadas como publicas. 
+
+#
+### 1.- Context y Reducer
+Se crearán archivos para el manejo de la autentificación de la aplicación:
+
+Pasos a Seguir
+* Crear 📂carpeta `auth/`.
+    * Crear archivo __authContext__ en `auth/authContext.js`.
+    * Crear archivo __authReducer__ en `auth/authReducer.js`.
+* Crear archivo en `types/types.js` para centralizar opciones del Reducer.
+* Agregar Context y Reducer en componente padre llamado `HeroesApp.js`.
+* Agregar Context en el componente __NavBar__.
+
+En `auth/authContext.js`
+* Importamos el metodo `createContext`, y le asignamos el nuevo contexto a componente `AuthContext`.
+````
+import { createContext } from 'react';
+
+export const AuthContext = createContext();
+````
+En `types/types.js`
+* En este punto se hará la centralización de todas las opciones del Reducer, se tendrá este objeto literarió, en el caso que se quiera agregar una acción mas al reducer, se agregará aquí la opción nueva.
+````
+export const types = {
+    login: '[auth] Login',
+    logout: '[auth] Logout'
+}
+````
+En `auth/authReducer.js`
+* Importamos el objeto literario con las diferentes opciones.
+````
+import { types } from '../types/types';
+````
+* Se crea el Reducer que recibirá como parametro un estado vacío, y la acción.
+* Se crea el switch que manejará las acciones.
+    * La primera opcion seria de iniciar sesión, y se cambiará el estado del `logged` a true.
+    * La segunda opcion será el cerrar sesión, y se cambiará el estado en false.
+    * Y finalmente el estado por defecto, devolverá el estado sin cambios.
+````
+export const authReducer = (state = {}, action ) => {
+
+    switch ( action.type ) {
+        case types.login:
+            return {
+                ...action.payload,
+                logged: true
+            }
+            
+        case types.logout:
+            return{
+                logged:false
+            }
+    
+        default:
+            return state;
+    }
+}
+````
+En `HeroesApp.js`
+* Se agrega 3 nuevas importaciónes __useReducer__, el componente que maneja el context __authContext__ y el Reducer __authReducer__. 
+````
+import { useReducer } from 'react';
+import { AuthContext } from './auth/authContext';
+import { authReducer } from './auth/authReducer';
+import { AppRouter } from './routers/AppRouter';
+````
+* Se crea la función `init()` que se le pasará al reducer.
+    * Esta función lo que hará es obtener los datos del `localStorage`, en el caso que no haya datos, se enviará el estado `logged` en false.
+````
+const init = () =>{
+    return JSON.parse( localStorage.getItem('user') ) || { logged:false }
+}
+````
+* Se añade el __useReducer__, le pasamos el Reducer con las opciones, el valor inicial con un objeto vacío y le mandamos un tercer argumento con la función recien mencionada `init`.
+````
+export const HeroesApp = () => {
+
+    const [ user, dispatch ] = useReducer( authReducer, {}, init );
+    ...
+}
+````
+* En el return encerramos el componente __AppRouter__ en el nuevo Context, y le pasamos `user` que correspnonde al estado del Reducer y `dispatch` el disparador de la acción.
+````
+return (
+        <AuthContext.Provider value={{
+            user,
+            dispatch 
+        }}>
+        <AppRouter />
+        </AuthContext.Provider>
+    )
+````
+En `components/ui/NavBar.js`
+* Se agregan 2 importaciones nuevas, __useContext__ y AuthContext donde esta el context.
+````
+import React, { useContext } from 'react';
+import { Link, NavLink, useNavigate} from 'react-router-dom';
+
+import { AuthContext } from '../../auth/authContext';
+````
+* Utilizamos el __useContext__ recibiendo el estado del Reducer `user` que se mando en el componente __HeroesApp__, y  dando referencia donde esta el componente del Contexto __AuthContext__.
+````
+const { user } = useContext(AuthContext);
+````
+* En el `<span>` del return del componente __NabBar__ se agregará el nombre del usuario.
+````
+<span className='nav-item nav-link text-info'>
+                        { user.name }
+</span>
 ````
 #
