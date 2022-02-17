@@ -22,7 +22,7 @@ npm start
 ````
 <br>
 
-> __Elemento Posterior 👀:__ __[HeroesApp - React](https://github.com/Paserno/react-router-hero-app)__
+> __Elemento Posterior 👀:__ __[App de React con SASS - Redux - Firebase](https://github.com/Paserno/react-redux-fst-app)__
 
 ----
 ### 1.- Inicio del Proyecto HeroesApp
