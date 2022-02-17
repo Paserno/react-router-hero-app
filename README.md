@@ -22,6 +22,8 @@ npm start
 ````
 <br>
 
+> __Elemento Posterior 👀:__ __[HeroesApp - React](https://github.com/Paserno/react-router-hero-app)__
+
 ----
 ### 1.- Inicio del Proyecto HeroesApp
 En este punto se crea el proyecto en __React__ y se eliminan algunos elementos, para luego adaptarlo a lo que se hará:
